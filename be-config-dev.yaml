@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-dev
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  DB_CONNECTION: "Host=postgres;Port=5432;Database=omni;Username=postgres;Password=postgres;Include Error Detail=true"
+  POSTGRES_PASSWORD: "postgres"
