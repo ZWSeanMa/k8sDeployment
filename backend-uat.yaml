@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: meetlyomni-backend
+  name: meetlyomni-backend-uat
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: meetlyomni-backend
+      app: meetlyomni-backend-uat
       environment: development
   template:
     metadata:
       labels:
-        app: meetlyomni-backend
+        app: meetlyomni-backend-uat
         environment: development
     spec:
       containers:
-        - name: meetlyomni-backend
+        - name: meetlyomni-backend-uat
           image: meetlyomni-backend:dev
           ports:
             - containerPort: 5180
@@ -26,10 +26,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: meetlyomni-backend
+  name: meetlyomni-backend-uat
 spec:
   selector:
-    app: meetlyomni-backend
+    app: meetlyomni-backend-uat
   ports:
     - port: 5180
       targetPort: 5180
+  type: ClusterIP
