@@ -1,0 +1,40 @@
+# 使用官方 Node.js 22 镜像作为构建阶段
+FROM node:22 AS build
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制 package.json 和 package-lock.json
+COPY package*.json ./ 
+
+# 安装项目依赖
+RUN npm install
+
+# 复制项目的其他文件
+COPY . .
+
+# # 设置环境变量，动态传递代理URL
+# ARG PROXY_URL=http://localhost:5180
+# ENV proxy=$PROXY_URL
+
+# 构建前端应用（假设是 React、Vue 或其他前端框架）
+RUN npm run build
+
+# 使用官方 Node.js 22 镜像作为运行阶段
+FROM node:22
+
+# 设置工作目录
+WORKDIR /app
+
+# 将构建好的前端文件从构建阶段复制到运行阶段
+COPY --from=build /app/dist /app/dist
+
+# 安装 serve（静态文件服务器）
+RUN npm install -g serve
+
+# 暴露端口 3000（如果你的 Node.js 应用在该端口运行）
+EXPOSE 5173
+
+# 启动静态文件服务器
+CMD ["serve", "-s", "dist", "-l", "5173"]
+

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meetlyomni-frontend-uat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meetlyomni-frontend-uat
+  template:
+    metadata:
+      labels:
+        app: meetlyomni-frontend-uat
+    spec:
+      containers:
+        - name: meetlyomni-frontend-uat
+          image: meetlyomni-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5173
+          env:         
+            - name: proxy
+              valueFrom:
+                configMapKeyRef:
+                  name: fe-config-dev
+                  key: proxy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meetlyomni-frontend-uat
+spec:
+  selector:
+    app: meetlyomni-frontend-uat
+  ports:
+    - port: 5173
+      targetPort: 5173
